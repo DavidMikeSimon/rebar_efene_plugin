@@ -1,5 +1,7 @@
 == Overview
 
-Rebar and Efene are both neat. This plugin lets you combine these two great flavors
+Rebar and Efene are both neat. This plugin lets you combine these two great flavors.
 
 == Installation
+
+Doesn't work yet. Stay tuned!
