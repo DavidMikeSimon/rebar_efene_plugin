@@ -1,0 +1,11 @@
+{application, build, [
+  {description, "Rebar Efene Plugin"},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+    kernel,
+    stdlib
+  ]},
+  {mod, { rebar_efene_plugin, []}},
+  {env, []}
+]}.
