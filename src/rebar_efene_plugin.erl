@@ -2,5 +2,12 @@
 
 -export([compile/2]).
 
-compile(Config, File) ->
-  rebar_log:log(warn, "Compile: [~p][~p]~n", [File, Config]).
+compile(_Config, AppFile) ->
+  rebar_log:log(info, "Converting efene source files near ~p~n", [AppFile]),
+  DirName = filename:dirname(AppFile),
+  {ok, Files} = os:list_dir(DirName),
+  process_efene_files(DirName, Files).
+
+process_efene_files(DirName, Files) ->
+  Result = os:cmd(io_lib:format("ls ~s", [DirName])),
+  rebar_log:log(info, "Converting ~p: ~p~n", [DirName, Result]).
