@@ -1,5 +1,3 @@
-# rebar_efene_plugin
-
 ## Overview
 
 Rebar and Efene are both neat. This plugin lets you combine these two great
@@ -15,7 +13,7 @@ necessary:
         rebar_efene_plugin
     ]}.
 
-And also add the GitHub url for the stable branch of rebar_efene_plugin to
+Also add the GitHub url for the stable branch of `rebar_efene_plugin` to
 the `deps` section:
 
     {deps, [
