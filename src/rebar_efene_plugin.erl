@@ -27,7 +27,7 @@
 %% THE SOFTWARE.
 %% -------------------------------------------------------------------
 
--module(rebar_efene_compiler).
+-module(rebar_efene_plugin).
 
 -export([compile/2]).
 
@@ -48,7 +48,7 @@ compile(Config, _AppFile) ->
 %% Internal functions
 %% ===================================================================
 
-compile_efene(Source, _Target, Config) ->
+compile_efene(Source, _Target, _Config) ->
     case code:which(fn) of
         non_existing ->
             io:format(
