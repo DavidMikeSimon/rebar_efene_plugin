@@ -1,13 +1,37 @@
--module(rebar_efene_plugin).
+-module(rebar_efene_compiler).
 
 -export([compile/2]).
 
-compile(_Config, AppFile) ->
-  rebar_log:log(info, "Converting efene source files near ~p~n", [AppFile]),
-  DirName = filename:dirname(AppFile),
-  {ok, Files} = file:list_dir(DirName),
-  process_efene_files(DirName, Files).
+-include("rebar.hrl").
 
-process_efene_files(DirName, Files) ->
-  Result = os:cmd(io_lib:format("ls ~s", [DirName])),
-  rebar_log:log(info, "Converting ~p: ~p~n", [DirName, Result]).
+%% ===================================================================
+%% Public API
+%% ===================================================================
+
+compile(Config, _AppFile) ->
+    EfeneFirstFiles = rebar_config:get_list(Config, efene_first_files, []),
+    IfeneFirstFiles = rebar_config:get_list(Config, ifene_first_files, []),
+    rebar_base_compiler:run(Config, EfeneFirstFiles, "src", ".fn", "ebin", ".beam",
+                            fun compile_efene/3).
+    rebar_base_compiler:run(Config, IfeneFirstFiles, "src", ".ifn", "ebin", ".beam",
+                            fun compile_efene/3).
+
+
+%% ===================================================================
+%% Internal functions
+%% ===================================================================
+
+compile_efene(Source, _Target, Config) ->
+    case code:which(fn) of
+        non_existing ->
+            ?CONSOLE("~n===============================================~n" ++
+                     " You need to install Efene to compile Efene source.~n" ++
+                     "   Download it from here:~n" ++
+                     "   http://www.marianoguerra.com.ar/efene/#download~n" ++
+                     "   then build it, and finally make sure to~n" ++
+                     "   install it into your erlang library dir~n" ++
+                     "===============================================~n~n", []),
+            ?FAIL;
+        _ ->
+          fn:compile(Source, "ebin")
+    end.
