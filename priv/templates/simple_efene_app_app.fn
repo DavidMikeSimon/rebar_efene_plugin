@@ -1,0 +1,15 @@
+@@behaviour(application)
+
+## ===================================================================
+## Application callbacks
+## ===================================================================
+
+@public
+start = fn(_StartType, _StartArgs) {
+  {{appid}}_sup.start_link()
+}
+
+@public
+stop = fn(_State) {
+  ok
+}

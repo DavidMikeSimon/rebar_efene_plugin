@@ -1,0 +1,21 @@
+@@behaviour(supervisor)
+
+## ===================================================================
+## API functions
+## ===================================================================
+
+@public
+start_link = fn() {
+  supervisor.start_link((local, $module), $module, [])
+}
+
+## ===================================================================
+## Supervisor callbacks
+## ===================================================================
+
+@public
+init = fn([]) {
+  RestartStrategy = (one_for_one, 5, 10)
+  Children = []
+  (ok, (RestartStrategy, Children))
+}

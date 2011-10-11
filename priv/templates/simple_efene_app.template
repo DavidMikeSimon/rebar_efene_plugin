@@ -1,0 +1,4 @@
+{variables, [{appid, "myapp"}]}.
+{template, "simple_efene_app.app.src", "src/{{appid}}.app.src"}.
+{template, "simple_efene_app_app.fn", "src/{{appid}}_app.fn"}.
+{template, "simple_efene_app_sup.fn", "src/{{appid}}_sup.fn"}.
