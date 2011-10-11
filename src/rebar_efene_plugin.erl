@@ -1,9 +1,9 @@
-%% -*- tab-width: 4;erlang-indent-level: 4;indent-tabs-mode: nil -*-
-%% ex: ts=4 sw=4 et
 %% -------------------------------------------------------------------
 %%
+%% Copyright (c) 2011 David Mike Simon (david.mike.simon@gmail.com)
+%%
 %% Rebar Efene Plugin is based upon rebar_lfe_compiler.erl from the 
-%% Rebar project:
+%% Rebar project, which had the following notice:
 %%
 %% Copyright (c) 2009 Dave Smith (dizzyd@dizzyd.com),
 %%                    Tim Dysinger (tim@dysinger.net)
@@ -36,30 +36,29 @@
 %% ===================================================================
 
 compile(Config, _AppFile) ->
-    EfeneFirstFiles = rebar_config:get_list(Config, efene_first_files, []),
-    IfeneFirstFiles = rebar_config:get_list(Config, ifene_first_files, []),
-    rebar_base_compiler:run(Config, EfeneFirstFiles, "src", ".fn", "ebin", ".beam",
-                            fun compile_efene/3),
-    rebar_base_compiler:run(Config, IfeneFirstFiles, "src", ".ifn", "ebin", ".beam",
-                            fun compile_efene/3).
-
+  ErlOpts = rebar_config:get(Config, erl_opts, []),
+  SrcDirs = ["src"|proplists:append_values(src_dirs, ErlOpts)],
+  Exts = [".fn", ".ifn"],
+  [ rebar_base_compiler:run(
+    Config, [], SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
+  ) || SrcDir <- SrcDirs, Ext <- Exts ].
 
 %% ===================================================================
 %% Internal functions
 %% ===================================================================
 
 compile_efene(Source, _Target, _Config) ->
-    case code:which(fn) of
-        non_existing ->
-            io:format(
-              "~n===============================================~n" ++
-              " You need to install Efene to compile Efene source.~n" ++
-              " Download it from here:~n" ++
-              "   http://www.marianoguerra.com.ar/efene/#download~n" ++
-              " and build it, and finally make sure to install it~n" ++
-              " into your erlang library dir.~n" ++
-              "===============================================~n~n", []),
-            throw({error, failed});
-        _ ->
-          fn:compile(Source, "ebin")
-    end.
+  case code:which(fn) of
+    non_existing ->
+      io:format(
+        "~n===============================================~n" ++
+        " You need to install Efene to compile Efene source.~n" ++
+        " Download it from here:~n" ++
+        "   http://www.marianoguerra.com.ar/efene/#download~n" ++
+        " and build it, and finally make sure to install it~n" ++
+        " into your erlang library dir.~n" ++
+        "===============================================~n~n", []),
+      throw({error, failed});
+    _ ->
+      fn:compile(Source, "ebin")
+  end.
