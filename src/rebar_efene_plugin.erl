@@ -2,7 +2,7 @@
 %%
 %% Copyright (c) 2011 David Mike Simon (david.mike.simon@gmail.com)
 %%
-%% Rebar Efene Plugin is based upon rebar_lfe_compiler.erl from the 
+%% This file is based upon rebar_lfe_compiler.erl from the
 %% Rebar project, which had the following notice:
 %%
 %% Copyright (c) 2009 Dave Smith (dizzyd@dizzyd.com),
@@ -49,17 +49,4 @@ compile(Config, _AppFile) ->
 %% ===================================================================
 
 compile_efene(Source, _Target, _Config) ->
-  case code:which(fn) of
-    non_existing ->
-      io:format(
-        "~n===============================================~n" ++
-        " You need to install Efene to compile Efene source.~n" ++
-        " Download it from here:~n" ++
-        "   http://www.marianoguerra.com.ar/efene/#download~n" ++
-        " and build it, and finally make sure to install it~n" ++
-        " into your erlang library dir.~n" ++
-        "===============================================~n~n", []),
-      throw({error, failed});
-    _ ->
-      fn:compile(Source, "ebin")
-  end.
+  fn:compile(Source, "ebin").
