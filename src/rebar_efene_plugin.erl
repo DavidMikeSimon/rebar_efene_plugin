@@ -41,7 +41,8 @@ compile(Config, _AppFile) ->
   Exts = [".fn", ".ifn"],
   [ rebar_base_compiler:run(
     Config, [], SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
-  ) || SrcDir <- SrcDirs, Ext <- Exts ].
+  ) || SrcDir <- SrcDirs, Ext <- Exts ],
+  ok.
 
 %% ===================================================================
 %% Internal functions
