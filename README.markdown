@@ -13,10 +13,13 @@ necessary:
         rebar_efene_plugin
     ]}.
 
-Also add the GitHub url for the stable branch of `rebar_efene_plugin` to
-the `deps` section:
+Also add the GitHub url for the stable branch of `rebar_efene_plugin`, as
+well as the url for Efene itself, to the `deps` section:
 
     {deps, [
+        {efene, ".*",
+          {git, "git://github.com/marianoguerra/efene.git", "master"}
+        },
         {rebar_efene_plugin, ".*",
             {git, "git://github.com/DavidMikeSimon/rebar_efene_plugin.git", "stable"}
         }
