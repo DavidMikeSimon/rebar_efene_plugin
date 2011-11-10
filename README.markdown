@@ -6,10 +6,10 @@ flavors, allowing rebar to compile efene source files.
 ## Installation
 
 In the root of your project dir, edit or create a file named `rebar.config`
-and add `rebar_efene_plugin` to the `rebar_plugins` section, creating it if
+and add `rebar_efene_plugin` to the `plugins` section, creating it if
 necessary:
 
-    {rebar_plugins, [
+    {plugins, [
         rebar_efene_plugin
     ]}.
 
