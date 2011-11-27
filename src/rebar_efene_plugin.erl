@@ -36,11 +36,12 @@
 %% ===================================================================
 
 compile(Config, _AppFile) ->
+  EfeneFirstFiles = rebar_config:get(Config, efene_first_files)
   ErlOpts = rebar_config:get(Config, erl_opts, []),
   SrcDirs = ["src"|proplists:append_values(src_dirs, ErlOpts)],
   Exts = [".fn", ".ifn"],
   [ rebar_base_compiler:run(
-    Config, [], SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
+    Config, EfeneFirstFiles, SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
   ) || SrcDir <- SrcDirs, Ext <- Exts ],
   ok.
 
