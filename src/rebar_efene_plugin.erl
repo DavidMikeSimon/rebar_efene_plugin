@@ -50,4 +50,7 @@ compile(Config, _AppFile) ->
 %% ===================================================================
 
 compile_efene(Source, _Target, _Config) ->
-  fn:compile(Source, "ebin").
+  try fn:compile(Source, "ebin")
+  catch Err -> io:format("~p: Efene compilation failed: ~p~n", [Source, Err]),
+               throw({error,failed})
+           end.
