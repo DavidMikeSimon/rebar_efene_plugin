@@ -36,20 +36,27 @@
 %% ===================================================================
 
 compile(Config, _AppFile) ->
-  EfeneFirstFiles = rebar_config:get(Config, efene_first_files)
   ErlOpts = rebar_config:get(Config, erl_opts, []),
   SrcDirs = ["src"|proplists:append_values(src_dirs, ErlOpts)],
   Exts = [".fn", ".ifn"],
-  [ rebar_base_compiler:run(
-    Config, EfeneFirstFiles, SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
-  ) || SrcDir <- SrcDirs, Ext <- Exts ],
+  FoundFiles = lists:append([
+    rebar_utils:find_files(SrcDir, ".*\\" ++ Ext ++ [$$])
+    || SrcDir <- SrcDirs, Ext <- Exts
+  ]),
+  FirstFiles = lists:filter(
+    fun(E) -> filelib:is_regular(E) end,
+    rebar_config:get(Config, efene_first_files, [])
+  ),
+  RestFiles = [Source || Source <- FoundFiles,
+                         not lists:member(Source, FirstFiles)],
+  rebar_base_compiler:run(Config, FirstFiles, RestFiles, fun compile_efene/2),
   ok.
 
 %% ===================================================================
 %% Internal functions
 %% ===================================================================
 
-compile_efene(Source, _Target, _Config) ->
+compile_efene(Source, _Config) ->
   try fn:compile(Source, "ebin")
   catch Err -> io:format("~p: Efene compilation failed: ~p~n", [Source, Err]),
                throw({error,failed})
