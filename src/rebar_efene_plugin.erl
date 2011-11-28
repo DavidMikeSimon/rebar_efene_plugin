@@ -42,7 +42,7 @@ compile(Config, _AppFile) ->
   Exts = [".fn", ".ifn"],
   [ rebar_base_compiler:run(
     Config,
-    lists:map(
+    lists:filter(
       fun(F) ->
         (string:str(F, SrcDir ++ "/") =:= 1)
         and (string:rstr(F, Ext) =:= string:len(F) - string:len(Ext) + 1)
@@ -63,6 +63,6 @@ compile(Config, _AppFile) ->
 
 compile_efene(Source, _Target, _Config) ->
   try fn:compile(Source, "ebin")
-  catch Err -> rebar:log(error, "~p: Efene compilation failed: ~p~n", [Source, Err]),
+  catch Err -> rebar_log:log(error, "~p: Efene compilation failed: ~p~n", [Source, Err]),
                throw({error,failed})
            end.
