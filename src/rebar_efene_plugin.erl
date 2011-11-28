@@ -41,7 +41,19 @@ compile(Config, _AppFile) ->
   SrcDirs = ["src"|proplists:append_values(src_dirs, ErlOpts)],
   Exts = [".fn", ".ifn"],
   [ rebar_base_compiler:run(
-    Config, EfeneFirstFiles, SrcDir, Ext, "ebin", ".beam", fun compile_efene/3
+    Config,
+    lists:map(
+      fun(F) ->
+        string:str(F, SrcDir ++ "/") =:= 1
+        and string:rstr(F, Ext) =:= string:len(F) - string:len(Ext) + 1
+      end,
+      EfeneFirstFiles
+    ),
+    SrcDir
+    Ext,
+    "ebin",
+    ".beam",
+    fun compile_efene/3
   ) || SrcDir <- SrcDirs, Ext <- Exts ],
   ok.
 
@@ -51,6 +63,6 @@ compile(Config, _AppFile) ->
 
 compile_efene(Source, _Target, _Config) ->
   try fn:compile(Source, "ebin")
-  catch Err -> io:format("~p: Efene compilation failed: ~p~n", [Source, Err]),
+  catch Err -> rebar:log(error, "~p: Efene compilation failed: ~p~n", [Source, Err]),
                throw({error,failed})
            end.
