@@ -36,20 +36,20 @@
 %% ===================================================================
 
 compile(Config, _AppFile) ->
-  EfeneFirstFiles = rebar_config:get(Config, efene_first_files)
+  EfeneFirstFiles = rebar_config:get(Config, efene_first_files, []),
   ErlOpts = rebar_config:get(Config, erl_opts, []),
   SrcDirs = ["src"|proplists:append_values(src_dirs, ErlOpts)],
   Exts = [".fn", ".ifn"],
   [ rebar_base_compiler:run(
     Config,
-    lists:map(
+    lists:filter(
       fun(F) ->
-        string:str(F, SrcDir ++ "/") =:= 1
-        and string:rstr(F, Ext) =:= string:len(F) - string:len(Ext) + 1
+        (string:str(F, SrcDir ++ "/") =:= 1)
+        and (string:rstr(F, Ext) =:= string:len(F) - string:len(Ext) + 1)
       end,
       EfeneFirstFiles
     ),
-    SrcDir
+    SrcDir,
     Ext,
     "ebin",
     ".beam",
