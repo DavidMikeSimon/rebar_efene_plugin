@@ -63,6 +63,8 @@ compile(Config, _AppFile) ->
 
 compile_efene(Source, _Target, _Config) ->
   try fn:compile(Source, "ebin")
-  catch Err -> rebar:log(error, "~p: Efene compilation failed: ~p~n", [Source, Err]),
-               throw({error,failed})
-           end.
+  catch Class:Err -> rebar_utils:abort(
+                       "~p: Efene compilation failed: ~p:~p~n",
+                       [Source, Class, Err]
+                     )
+  end.
